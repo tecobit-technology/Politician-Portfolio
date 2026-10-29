@@ -42,7 +42,7 @@ export async function GET(
   }
 }
 
-// PATCH - Partially update news
+// PATCH - Update news
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -53,20 +53,153 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const allowedFields = [
-      "title",
-      "description",
-      "image",
-      "date",
-    ];
+    // ============================================
+    // FIND NEWS
+    // ============================================
+
+    const news = await News.findById(id);
+
+    if (!news) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "News not found",
+        },
+        { status: 404 },
+      );
+    }
+
+    // ============================================
+    // BUILD UPDATE
+    // ============================================
 
     const updates: Record<string, unknown> = {};
 
-    for (const field of allowedFields) {
-      if (body[field] !== undefined) {
-        updates[field] = body[field];
+    // ============================================
+    // TRANSLATIONS
+    // ============================================
+
+    if (body.translations !== undefined) {
+      if (!Array.isArray(body.translations)) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Translations must be an array",
+          },
+          { status: 400 },
+        );
       }
+
+      // Make sure both languages exist
+      const english = body.translations.find(
+        (translation: {
+          locale: string;
+          title: string;
+          description: string;
+        }) => translation.locale === "en",
+      );
+
+      const nepali = body.translations.find(
+        (translation: {
+          locale: string;
+          title: string;
+          description: string;
+        }) => translation.locale === "ne",
+      );
+
+      if (!english) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "English translation is required",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (!nepali) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Nepali translation is required",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (!english.title?.trim()) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "English title is required",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (!english.description?.trim()) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "English description is required",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (!nepali.title?.trim()) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Nepali title is required",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (!nepali.description?.trim()) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Nepali description is required",
+          },
+          { status: 400 },
+        );
+      }
+
+      updates.translations = [
+        {
+          locale: "en",
+          title: english.title.trim(),
+          description: english.description.trim(),
+        },
+        {
+          locale: "ne",
+          title: nepali.title.trim(),
+          description: nepali.description.trim(),
+        },
+      ];
     }
+
+    // ============================================
+    // IMAGE
+    // ============================================
+
+    if (body.image !== undefined) {
+      updates.image = body.image;
+    }
+
+    // ============================================
+    // DATE
+    // ============================================
+
+    if (body.date !== undefined) {
+      updates.date = body.date;
+    }
+
+    // ============================================
+    // CHECK UPDATE
+    // ============================================
 
     if (Object.keys(updates).length === 0) {
       return NextResponse.json(
@@ -78,16 +211,21 @@ export async function PATCH(
       );
     }
 
-    const updatedNews = await News.findByIdAndUpdate(
-      id,
-      {
-        $set: updates,
-      },
-      {
-        returnDocument: "after",
-        runValidators: true,
-      },
-    );
+    // ============================================
+    // UPDATE DATABASE
+    // ============================================
+
+    const updatedNews =
+      await News.findByIdAndUpdate(
+        id,
+        {
+          $set: updates,
+        },
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
 
     if (!updatedNews) {
       return NextResponse.json(
@@ -98,6 +236,10 @@ export async function PATCH(
         { status: 404 },
       );
     }
+
+    // ============================================
+    // SUCCESS
+    // ============================================
 
     return NextResponse.json(
       {

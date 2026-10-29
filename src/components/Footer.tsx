@@ -9,13 +9,10 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-[#6C1511] text-white">
-
       {/* Main Footer Content */}
       <div className="mx-auto flex max-w-[1170px] items-end justify-center gap-[30px] px-5 pb-[22px] pt-[43px] lg:px-0">
-
         {/* Left Content + Links + Contact */}
         <div className="flex w-full flex-col gap-[47px] md:flex-row md:items-start">
-
           {/* Brand */}
           <div className="w-full shrink-0 md:w-[336px]">
             <div className="flex items-center">
@@ -107,9 +104,11 @@ export default function Footer() {
             </h3>
 
             <div className="mt-4 space-y-3 text-[14px]">
-
               {/* Phone */}
-              <div className="flex items-center gap-2">
+              <a
+                href="tel:+9779700066129"
+                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+              >
                 <Image
                   src="/icons/Phone.svg"
                   alt="Phone"
@@ -118,13 +117,14 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span className="text-[#EDEBE6]">
-                  +977 9700066129
-                </span>
-              </div>
+                <span>+977 9700066129</span>
+              </a>
 
               {/* Email */}
-              <div className="flex items-center gap-2">
+              <a
+                href="mailto:bishnurokaya@gmail.com"
+                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+              >
                 <Image
                   src="/icons/Email.svg"
                   alt="Email"
@@ -133,13 +133,16 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span className="text-[#EDEBE6]">
-                  bishnurokaya@gmail.com
-                </span>
-              </div>
+                <span>bishnurokaya@gmail.com</span>
+              </a>
 
               {/* YouTube */}
-              <div className="flex items-center gap-2">
+              <a
+                href="https://youtube.com/bishnurokaya"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+              >
                 <Image
                   src="/icons/Youtube.svg"
                   alt="YouTube"
@@ -148,13 +151,16 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span className="text-[#EDEBE6]">
-                  youtube.com/bishnurokaya
-                </span>
-              </div>
+                <span>youtube.com/bishnurokaya</span>
+              </a>
 
               {/* Instagram */}
-              <div className="flex items-center gap-2">
+              <a
+                href="https://instagram.com/bishnurokaya"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+              >
                 <Image
                   src="/icons/Instagram.svg"
                   alt="Instagram"
@@ -163,18 +169,32 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span className="text-[#EDEBE6]">
-                  @bishnurokaya
-                </span>
-              </div>
+                <span>@bishnurokaya</span>
+              </a>
 
+              {/* Facebook */}
+              <a
+                href="https://facebook.com/bishnurokaya"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+              >
+                <Image
+                  src="/icons/facebook.svg"
+                  alt="Facebook"
+                  width={16}
+                  height={16}
+                  className="h-4 w-4 shrink-0"
+                />
+
+                <span>facebook.com/bishnurokaya</span>
+              </a>
             </div>
           </div>
         </div>
 
         {/* Newsletter / Campaign */}
         <div className="w-[280px] shrink-0 rounded-[24px] border border-white/10 bg-white/10 p-[24px]">
-
           <h3 className="text-[16px] font-semibold leading-normal text-[#C9982A]">
             {t("campaign.title")}
           </h3>
@@ -189,7 +209,6 @@ export default function Footer() {
           >
             {t("campaign.joinNow")}
           </Link>
-
         </div>
       </div>
 
@@ -200,7 +219,6 @@ export default function Footer() {
       <div className="px-5 py-[18px] text-center text-[13px] leading-normal text-[#C9C6BF]">
         {t("copyright")}
       </div>
-
     </footer>
   );
 }

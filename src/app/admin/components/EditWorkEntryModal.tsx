@@ -8,38 +8,92 @@ import {
   useState,
 } from "react";
 
-type GalleryTranslation = {
-  locale: "en" | "ne";
+// =====================================================
+// TYPES
+// =====================================================
+
+type Locale = "en" | "ne";
+
+type WorkTranslation = {
+  locale: Locale;
+
   title: string;
+  description: string;
+
   category: string;
+  location: string;
+  eventTypes: string;
+  eventCategory: string;
+
+  problem: string;
+  action: string;
+  outcome: string;
 };
 
-type Gallery = {
+export type Work = {
   _id: string;
-  translations: GalleryTranslation[];
+
+  projectId: string;
+
+  translations: WorkTranslation[];
+
   image: string;
-  date?: string;
+  galleryImages: string[];
+
+  ward: string;
+
+  status: "Ongoing" | "Completed";
+
+  completedDate?: string | null;
+
+  createdAt?: string;
+  updatedAt?: string;
 };
 
-type EditGalleryModalProps = {
-  gallery: Gallery | null;
-  isOpen: boolean;
+type EditWorkEntryModalProps = {
+  work: Work;
+
   onClose: () => void;
-  onUpdated: (updatedGallery: Gallery) => void;
+
+  onSave: (updatedWork: Work) => Promise<void> | void;
 };
 
-export default function EditGalleryModal({
-  gallery,
-  isOpen,
+// =====================================================
+// COMPONENT
+// =====================================================
+
+export default function EditWorkEntryModal({
+  work,
   onClose,
-  onUpdated,
-}: EditGalleryModalProps) {
+  onSave,
+}: EditWorkEntryModalProps) {
   // =====================================================
   // ENGLISH
   // =====================================================
 
   const [englishTitle, setEnglishTitle] = useState("");
+  const [englishDescription, setEnglishDescription] =
+    useState("");
+
   const [englishCategory, setEnglishCategory] =
+    useState("");
+
+  const [englishLocation, setEnglishLocation] =
+    useState("");
+
+  const [englishEventTypes, setEnglishEventTypes] =
+    useState("");
+
+  const [englishEventCategory, setEnglishEventCategory] =
+    useState("");
+
+  const [englishProblem, setEnglishProblem] =
+    useState("");
+
+  const [englishAction, setEnglishAction] =
+    useState("");
+
+  const [englishOutcome, setEnglishOutcome] =
     useState("");
 
   // =====================================================
@@ -47,157 +101,284 @@ export default function EditGalleryModal({
   // =====================================================
 
   const [nepaliTitle, setNepaliTitle] = useState("");
+  const [nepaliDescription, setNepaliDescription] =
+    useState("");
+
   const [nepaliCategory, setNepaliCategory] =
     useState("");
 
+  const [nepaliLocation, setNepaliLocation] =
+    useState("");
+
+  const [nepaliEventTypes, setNepaliEventTypes] =
+    useState("");
+
+  const [nepaliEventCategory, setNepaliEventCategory] =
+    useState("");
+
+  const [nepaliProblem, setNepaliProblem] =
+    useState("");
+
+  const [nepaliAction, setNepaliAction] =
+    useState("");
+
+  const [nepaliOutcome, setNepaliOutcome] =
+    useState("");
+
   // =====================================================
-  // IMAGE
+  // COMMON
   // =====================================================
 
-  // Current Cloudinary URL
+  const [projectId, setProjectId] = useState("");
+  const [ward, setWard] = useState("");
+
+  const [status, setStatus] =
+    useState<"Ongoing" | "Completed">("Ongoing");
+
+  const [completedDate, setCompletedDate] =
+    useState("");
+
+  // =====================================================
+  // MAIN IMAGE
+  // =====================================================
+
   const [image, setImage] = useState("");
 
-  // Preview URL
   const [imagePreview, setImagePreview] =
     useState("");
 
-  // New selected image
   const [selectedImage, setSelectedImage] =
     useState<File | null>(null);
 
   // =====================================================
-  // DATE
+  // GALLERY IMAGES
   // =====================================================
 
-  const [date, setDate] = useState("");
+  const [galleryImages, setGalleryImages] =
+    useState<string[]>([]);
+
+  const [selectedGalleryImages, setSelectedGalleryImages] =
+    useState<File[]>([]);
+
+  const [galleryPreviews, setGalleryPreviews] =
+    useState<string[]>([]);
 
   // =====================================================
-  // STATUS
+  // STATE
   // =====================================================
 
   const [loading, setLoading] = useState(false);
+
   const [uploading, setUploading] =
     useState(false);
 
   const [error, setError] = useState("");
 
-  const fileInputRef =
+  // =====================================================
+  // REFS
+  // =====================================================
+
+  const mainImageInputRef =
+    useRef<HTMLInputElement>(null);
+
+  const galleryImageInputRef =
     useRef<HTMLInputElement>(null);
 
   // =====================================================
-  // LOAD GALLERY DATA
+  // LOAD WORK DATA
   // =====================================================
 
   useEffect(() => {
-    if (!gallery) return;
+    if (!work) return;
 
-    // ---------------------------------------------------
-    // FIND ENGLISH TRANSLATION
-    // ---------------------------------------------------
+    // ===================================================
+    // FIND TRANSLATIONS
+    // ===================================================
 
     const english =
-      gallery.translations?.find(
+      work.translations?.find(
         (translation) =>
           translation.locale === "en",
       );
 
-    // ---------------------------------------------------
-    // FIND NEPALI TRANSLATION
-    // ---------------------------------------------------
-
     const nepali =
-      gallery.translations?.find(
+      work.translations?.find(
         (translation) =>
           translation.locale === "ne",
       );
 
-    // ---------------------------------------------------
+    // ===================================================
     // ENGLISH
-    // ---------------------------------------------------
+    // ===================================================
 
     setEnglishTitle(
       english?.title || "",
+    );
+
+    setEnglishDescription(
+      english?.description || "",
     );
 
     setEnglishCategory(
       english?.category || "",
     );
 
-    // ---------------------------------------------------
+    setEnglishLocation(
+      english?.location || "",
+    );
+
+    setEnglishEventTypes(
+      english?.eventTypes || "",
+    );
+
+    setEnglishEventCategory(
+      english?.eventCategory || "",
+    );
+
+    setEnglishProblem(
+      english?.problem || "",
+    );
+
+    setEnglishAction(
+      english?.action || "",
+    );
+
+    setEnglishOutcome(
+      english?.outcome || "",
+    );
+
+    // ===================================================
     // NEPALI
-    // ---------------------------------------------------
+    // ===================================================
 
     setNepaliTitle(
       nepali?.title || "",
+    );
+
+    setNepaliDescription(
+      nepali?.description || "",
     );
 
     setNepaliCategory(
       nepali?.category || "",
     );
 
-    // ---------------------------------------------------
-    // DATE
-    // ---------------------------------------------------
+    setNepaliLocation(
+      nepali?.location || "",
+    );
 
-    if (gallery.date) {
-      const parsedDate = new Date(
-        gallery.date,
-      );
+    setNepaliEventTypes(
+      nepali?.eventTypes || "",
+    );
+
+    setNepaliEventCategory(
+      nepali?.eventCategory || "",
+    );
+
+    setNepaliProblem(
+      nepali?.problem || "",
+    );
+
+    setNepaliAction(
+      nepali?.action || "",
+    );
+
+    setNepaliOutcome(
+      nepali?.outcome || "",
+    );
+
+    // ===================================================
+    // COMMON
+    // ===================================================
+
+    setProjectId(
+      work.projectId || "",
+    );
+
+    setWard(
+      work.ward || "",
+    );
+
+    setStatus(
+      work.status || "Ongoing",
+    );
+
+    // ===================================================
+    // DATE
+    // ===================================================
+
+    if (work.completedDate) {
+      const parsedDate =
+        new Date(work.completedDate);
 
       if (
         !Number.isNaN(
           parsedDate.getTime(),
         )
       ) {
-        setDate(
+        setCompletedDate(
           parsedDate
             .toISOString()
             .split("T")[0],
         );
       } else {
-        setDate("");
+        setCompletedDate("");
       }
     } else {
-      setDate("");
+      setCompletedDate("");
     }
 
-    // ---------------------------------------------------
-    // IMAGE
-    // ---------------------------------------------------
+    // ===================================================
+    // MAIN IMAGE
+    // ===================================================
 
-    setImage(gallery.image || "");
+    setImage(
+      work.image || "",
+    );
 
     setImagePreview(
-      gallery.image || "",
+      work.image || "",
     );
 
     setSelectedImage(null);
 
+    // ===================================================
+    // GALLERY
+    // ===================================================
+
+    setGalleryImages(
+      Array.isArray(work.galleryImages)
+        ? work.galleryImages
+        : [],
+    );
+
+    setSelectedGalleryImages([]);
+
+    setGalleryPreviews([]);
+
+    // ===================================================
+    // RESET
+    // ===================================================
+
     setError("");
-  }, [gallery]);
+    setLoading(false);
+    setUploading(false);
+  }, [work]);
 
   // =====================================================
-  // CLOSE IF NOT OPEN
-  // =====================================================
-
-  if (!isOpen || !gallery) {
-    return null;
-  }
-
-  // =====================================================
-  // IMAGE CHANGE
+  // MAIN IMAGE CHANGE
   // =====================================================
 
   function handleImageChange(
-    e: ChangeEvent<HTMLInputElement>,
+    event: ChangeEvent<HTMLInputElement>,
   ) {
     const file =
-      e.target.files?.[0];
+      event.target.files?.[0];
 
     if (!file) return;
 
     // ---------------------------------------------------
-    // VALIDATE TYPE
+    // TYPE
     // ---------------------------------------------------
 
     if (!file.type.startsWith("image/")) {
@@ -208,7 +389,7 @@ export default function EditGalleryModal({
     }
 
     // ---------------------------------------------------
-    // VALIDATE SIZE
+    // SIZE
     // ---------------------------------------------------
 
     if (
@@ -216,21 +397,121 @@ export default function EditGalleryModal({
       5 * 1024 * 1024
     ) {
       setError(
-        "Image must be smaller than 5MB.",
+        "Main image must be smaller than 5MB.",
       );
       return;
     }
 
     setError("");
 
-    // Store selected file
     setSelectedImage(file);
 
-    // Create preview
     const previewUrl =
       URL.createObjectURL(file);
 
     setImagePreview(previewUrl);
+  }
+
+  // =====================================================
+  // GALLERY IMAGE CHANGE
+  // =====================================================
+
+  function handleGalleryImagesChange(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    const files =
+      Array.from(
+        event.target.files || [],
+      );
+
+    if (files.length === 0) return;
+
+    // ---------------------------------------------------
+    // VALIDATE FILES
+    // ---------------------------------------------------
+
+    for (const file of files) {
+      if (!file.type.startsWith("image/")) {
+        setError(
+          "Only image files are allowed.",
+        );
+        return;
+      }
+
+      if (
+        file.size >
+        5 * 1024 * 1024
+      ) {
+        setError(
+          `${file.name} is larger than 5MB.`,
+        );
+        return;
+      }
+    }
+
+    setError("");
+
+    setSelectedGalleryImages(
+      (previous) => [
+        ...previous,
+        ...files,
+      ],
+    );
+
+    const newPreviews =
+      files.map((file) =>
+        URL.createObjectURL(file),
+      );
+
+    setGalleryPreviews(
+      (previous) => [
+        ...previous,
+        ...newPreviews,
+      ],
+    );
+
+    // Allow selecting same file again
+    event.target.value = "";
+  }
+
+  // =====================================================
+  // REMOVE EXISTING GALLERY IMAGE
+  // =====================================================
+
+  function removeGalleryImage(
+    index: number,
+  ) {
+    setGalleryImages(
+      (previous) =>
+        previous.filter(
+          (_, imageIndex) =>
+            imageIndex !== index,
+        ),
+    );
+  }
+
+  // =====================================================
+  // REMOVE NEW GALLERY IMAGE
+  // =====================================================
+
+  function removeNewGalleryImage(
+    index: number,
+  ) {
+    setSelectedGalleryImages(
+      (previous) =>
+        previous.filter(
+          (_, imageIndex) =>
+            imageIndex !== index,
+        ),
+    );
+
+    setGalleryPreviews(
+      (previous) =>
+        previous.filter(
+          (_, imageIndex) =>
+            imageIndex !== index,
+        ),
+    );
   }
 
   // =====================================================
@@ -239,6 +520,7 @@ export default function EditGalleryModal({
 
   async function uploadImageToCloudinary(
     file: File,
+    folder: string,
   ): Promise<string> {
     const formData = new FormData();
 
@@ -249,7 +531,7 @@ export default function EditGalleryModal({
 
     formData.append(
       "folder",
-      "gallery",
+      folder,
     );
 
     const response =
@@ -270,7 +552,7 @@ export default function EditGalleryModal({
     ) {
       throw new Error(
         data?.error ||
-          "Failed to upload image",
+          "Failed to upload image.",
       );
     }
 
@@ -282,19 +564,47 @@ export default function EditGalleryModal({
   // =====================================================
 
   async function handleSubmit(
-    e: FormEvent<HTMLFormElement>,
+    event: FormEvent<HTMLFormElement>,
   ) {
-    e.preventDefault();
+    event.preventDefault();
 
     setError("");
 
     // ===================================================
-    // VALIDATE ENGLISH
+    // VALIDATION
     // ===================================================
+
+    if (!projectId.trim()) {
+      setError(
+        "Project ID is required.",
+      );
+      return;
+    }
 
     if (!englishTitle.trim()) {
       setError(
         "English title is required.",
+      );
+      return;
+    }
+
+    if (!englishDescription.trim()) {
+      setError(
+        "English description is required.",
+      );
+      return;
+    }
+
+    if (!nepaliTitle.trim()) {
+      setError(
+        "Nepali title is required.",
+      );
+      return;
+    }
+
+    if (!nepaliDescription.trim()) {
+      setError(
+        "Nepali description is required.",
       );
       return;
     }
@@ -306,20 +616,23 @@ export default function EditGalleryModal({
       return;
     }
 
-    // ===================================================
-    // VALIDATE NEPALI
-    // ===================================================
-
-    if (!nepaliTitle.trim()) {
+    if (!nepaliCategory.trim()) {
       setError(
-        "Nepali title is required.",
+        "Nepali category is required.",
       );
       return;
     }
 
-    if (!nepaliCategory.trim()) {
+    if (!englishLocation.trim()) {
       setError(
-        "Nepali category is required.",
+        "English location is required.",
+      );
+      return;
+    }
+
+    if (!nepaliLocation.trim()) {
+      setError(
+        "Nepali location is required.",
       );
       return;
     }
@@ -328,14 +641,10 @@ export default function EditGalleryModal({
       setLoading(true);
 
       // =================================================
-      // KEEP CURRENT IMAGE
+      // MAIN IMAGE
       // =================================================
 
       let imageUrl = image;
-
-      // =================================================
-      // UPLOAD NEW IMAGE IF SELECTED
-      // =================================================
 
       if (selectedImage) {
         setUploading(true);
@@ -343,98 +652,181 @@ export default function EditGalleryModal({
         imageUrl =
           await uploadImageToCloudinary(
             selectedImage,
+            "works",
           );
 
         setUploading(false);
       }
 
       // =================================================
-      // PATCH GALLERY
+      // GALLERY IMAGES
       // =================================================
 
-      const response =
-        await fetch(
-          `/api/gallery/${gallery._id}`,
-          {
-            method: "PATCH",
-
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body: JSON.stringify({
-              translations: [
-                {
-                  locale: "en",
-                  title:
-                    englishTitle.trim(),
-                  category:
-                    englishCategory.trim(),
-                },
-                {
-                  locale: "ne",
-                  title:
-                    nepaliTitle.trim(),
-                  category:
-                    nepaliCategory.trim(),
-                },
-              ],
-
-              image: imageUrl,
-
-              date:
-                date || undefined,
-            }),
-          },
-        );
-
-      const data =
-        await response.json();
-
-      // =================================================
-      // CHECK RESPONSE
-      // =================================================
+      let updatedGalleryImages =
+        [...galleryImages];
 
       if (
-        !response.ok ||
-        !data.success
+        selectedGalleryImages.length >
+        0
       ) {
-        throw new Error(
-          data?.message ||
-            "Failed to update gallery",
-        );
+        setUploading(true);
+
+        const uploadedGalleryImages =
+          await Promise.all(
+            selectedGalleryImages.map(
+              (file) =>
+                uploadImageToCloudinary(
+                  file,
+                  "works/gallery",
+                ),
+            ),
+          );
+
+        updatedGalleryImages = [
+          ...updatedGalleryImages,
+          ...uploadedGalleryImages,
+        ];
+
+        setUploading(false);
       }
+
+      // =================================================
+      // UPDATED WORK
+      // =================================================
+
+      const updatedWork: Work = {
+        ...work,
+
+        projectId:
+          projectId.trim(),
+
+        translations: [
+          // =============================================
+          // ENGLISH
+          // =============================================
+
+          {
+            locale: "en",
+
+            title:
+              englishTitle.trim(),
+
+            description:
+              englishDescription.trim(),
+
+            category:
+              englishCategory.trim(),
+
+            location:
+              englishLocation.trim(),
+
+            eventTypes:
+              englishEventTypes.trim(),
+
+            eventCategory:
+              englishEventCategory.trim(),
+
+            problem:
+              englishProblem.trim(),
+
+            action:
+              englishAction.trim(),
+
+            outcome:
+              englishOutcome.trim(),
+          },
+
+          // =============================================
+          // NEPALI
+          // =============================================
+
+          {
+            locale: "ne",
+
+            title:
+              nepaliTitle.trim(),
+
+            description:
+              nepaliDescription.trim(),
+
+            category:
+              nepaliCategory.trim(),
+
+            location:
+              nepaliLocation.trim(),
+
+            eventTypes:
+              nepaliEventTypes.trim(),
+
+            eventCategory:
+              nepaliEventCategory.trim(),
+
+            problem:
+              nepaliProblem.trim(),
+
+            action:
+              nepaliAction.trim(),
+
+            outcome:
+              nepaliOutcome.trim(),
+          },
+        ],
+
+        image:
+          imageUrl,
+
+        galleryImages:
+          updatedGalleryImages,
+
+        ward:
+          ward.trim(),
+
+        status,
+
+        completedDate:
+          status === "Completed"
+            ? completedDate || null
+            : null,
+      };
+
+      // =================================================
+      // DEBUG
+      // =================================================
+
+      console.log(
+        "UPDATED WORK:",
+        JSON.stringify(
+          updatedWork,
+          null,
+          2,
+        ),
+      );
+
+      // =================================================
+      // SEND TO PARENT
+      // =================================================
+
+      await onSave(updatedWork);
 
       // =================================================
       // SUCCESS
       // =================================================
 
       alert(
-        "Gallery updated successfully!",
+        "Work updated successfully!",
       );
-
-      // API returns:
-      //
-      // {
-      //   success: true,
-      //   message: "...",
-      //   data: updatedGallery
-      // }
-
-      onUpdated(data.data);
 
       onClose();
     } catch (error) {
       console.error(
-        "Update gallery error:",
+        "Update work error:",
         error,
       );
 
       setError(
         error instanceof Error
           ? error.message
-          : "Something went wrong while updating.",
+          : "Failed to update work.",
       );
     } finally {
       setLoading(false);
@@ -443,7 +835,52 @@ export default function EditGalleryModal({
   }
 
   // =====================================================
-  // UI
+  // INPUT CLASS
+  // =====================================================
+
+  const inputClass = `
+    w-full
+    rounded-lg
+    border
+    border-gray-300
+    bg-white
+    px-4
+    py-3
+    text-sm
+    text-[#221f1a]
+    outline-none
+    transition
+    focus:border-[#8A1538]
+    focus:ring-1
+    focus:ring-[#8A1538]
+    disabled:opacity-50
+  `;
+
+  // =====================================================
+  // TEXTAREA CLASS
+  // =====================================================
+
+  const textareaClass = `
+    w-full
+    rounded-lg
+    border
+    border-gray-300
+    bg-white
+    px-4
+    py-3
+    text-sm
+    text-[#221f1a]
+    outline-none
+    transition
+    focus:border-[#8A1538]
+    focus:ring-1
+    focus:ring-[#8A1538]
+    disabled:opacity-50
+    resize-y
+  `;
+
+  // =====================================================
+  // RETURN
   // =====================================================
 
   return (
@@ -462,12 +899,15 @@ export default function EditGalleryModal({
     >
       <div
         className="
+          flex
+          max-h-[92vh]
           w-full
-          max-w-[600px]
+          max-w-[900px]
+          flex-col
           overflow-hidden
           rounded-2xl
           bg-white
-          shadow-xl
+          shadow-2xl
         "
       >
         {/* =================================================
@@ -477,9 +917,11 @@ export default function EditGalleryModal({
         <div
           className="
             flex
+            shrink-0
             items-center
             justify-between
             border-b
+            border-[#e1d0cf]
             px-6
             py-5
           "
@@ -493,7 +935,7 @@ export default function EditGalleryModal({
                 text-[#221f1a]
               "
             >
-              Edit Gallery
+              Edit Work
             </h2>
 
             <p
@@ -503,7 +945,8 @@ export default function EditGalleryModal({
                 text-[#4a483f]
               "
             >
-              Update gallery information
+              Update development project
+              information
             </p>
           </div>
 
@@ -536,11 +979,15 @@ export default function EditGalleryModal({
             FORM
         ================================================= */}
 
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          className="flex min-h-0 flex-1 flex-col"
+        >
           <div
             className="
-              max-h-[70vh]
-              space-y-5
+              min-h-0
+              flex-1
+              space-y-6
               overflow-y-auto
               px-6
               py-6
@@ -568,7 +1015,7 @@ export default function EditGalleryModal({
             )}
 
             {/* =================================================
-                ENGLISH SECTION
+                COMMON INFORMATION
             ================================================= */}
 
             <div
@@ -577,12 +1024,173 @@ export default function EditGalleryModal({
                 border
                 border-[#e1d0cf]
                 bg-[#faf9f7]
-                p-4
+                p-5
               "
             >
               <h3
                 className="
                   mb-4
+                  text-sm
+                  font-semibold
+                  text-[#8A1538]
+                "
+              >
+                Project Information
+              </h3>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {/* PROJECT ID */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-project-id"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Project ID
+                  </label>
+
+                  <input
+                    id="edit-work-project-id"
+                    type="text"
+                    value={projectId}
+                    onChange={(e) =>
+                      setProjectId(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    className={inputClass}
+                  />
+                </div>
+
+                {/* WARD */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-ward"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Ward
+                  </label>
+
+                  <input
+                    id="edit-work-ward"
+                    type="text"
+                    value={ward}
+                    onChange={(e) =>
+                      setWard(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    placeholder="e.g. Ward 5"
+                    className={inputClass}
+                  />
+                </div>
+
+                {/* STATUS */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-status"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Status
+                  </label>
+
+                  <select
+                    id="edit-work-status"
+                    value={status}
+                    onChange={(e) =>
+                      setStatus(
+                        e.target.value as
+                          | "Ongoing"
+                          | "Completed",
+                      )
+                    }
+                    disabled={loading}
+                    className={inputClass}
+                  >
+                    <option value="Ongoing">
+                      Ongoing
+                    </option>
+
+                    <option value="Completed">
+                      Completed
+                    </option>
+                  </select>
+                </div>
+
+                {/* COMPLETED DATE */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-completed-date"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Completed Date
+                  </label>
+
+                  <input
+                    id="edit-work-completed-date"
+                    type="date"
+                    value={completedDate}
+                    onChange={(e) =>
+                      setCompletedDate(
+                        e.target.value,
+                      )
+                    }
+                    disabled={
+                      loading ||
+                      status !==
+                        "Completed"
+                    }
+                    className={inputClass}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* =================================================
+                ENGLISH
+            ================================================= */}
+
+            <div
+              className="
+                rounded-xl
+                border
+                border-[#e1d0cf]
+                bg-[#faf9f7]
+                p-5
+              "
+            >
+              <h3
+                className="
+                  mb-5
                   text-sm
                   font-semibold
                   text-[#8A1538]
@@ -591,125 +1199,299 @@ export default function EditGalleryModal({
                 English
               </h3>
 
-              {/* ENGLISH TITLE */}
+              <div className="space-y-5">
+                {/* TITLE */}
 
-              <div className="mb-4">
-                <label
-                  htmlFor="gallery-english-title"
-                  className="
-                    mb-2
-                    block
-                    text-sm
-                    font-medium
-                    text-[#221f1a]
-                  "
-                >
-                  Title
-                </label>
+                <div>
+                  <label
+                    htmlFor="edit-work-english-title"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Title
+                  </label>
 
-                <input
-                  id="gallery-english-title"
-                  type="text"
-                  value={englishTitle}
-                  onChange={(e) =>
-                    setEnglishTitle(
-                      e.target.value,
-                    )
-                  }
-                  disabled={loading}
-                  placeholder="Enter English title"
-                  className="
-                    w-full
-                    rounded-lg
-                    border
-                    border-gray-300
-                    bg-white
-                    px-4
-                    py-3
-                    text-sm
-                    text-[#221f1a]
-                    outline-none
-                    transition
-                    focus:border-[#8A1538]
-                    focus:ring-1
-                    focus:ring-[#8A1538]
-                    disabled:opacity-50
-                  "
-                />
-              </div>
+                  <input
+                    id="edit-work-english-title"
+                    type="text"
+                    value={englishTitle}
+                    onChange={(e) =>
+                      setEnglishTitle(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    className={inputClass}
+                  />
+                </div>
 
-              {/* ENGLISH CATEGORY */}
+                {/* DESCRIPTION */}
 
-              <div>
-                <label
-                  htmlFor="gallery-english-category"
-                  className="
-                    mb-2
-                    block
-                    text-sm
-                    font-medium
-                    text-[#221f1a]
-                  "
-                >
-                  Category
-                </label>
+                <div>
+                  <label
+                    htmlFor="edit-work-english-description"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Description
+                  </label>
 
-                <select
-                  id="gallery-english-category"
-                  value={englishCategory}
-                  onChange={(e) =>
-                    setEnglishCategory(
-                      e.target.value,
-                    )
-                  }
-                  disabled={loading}
-                  className="
-                    w-full
-                    rounded-lg
-                    border
-                    border-gray-300
-                    bg-white
-                    px-4
-                    py-3
-                    text-sm
-                    text-[#221f1a]
-                    outline-none
-                    transition
-                    focus:border-[#8A1538]
-                    focus:ring-1
-                    focus:ring-[#8A1538]
-                    disabled:opacity-50
-                  "
-                >
-                  <option value="">
-                    Select category
-                  </option>
+                  <textarea
+                    id="edit-work-english-description"
+                    value={
+                      englishDescription
+                    }
+                    onChange={(e) =>
+                      setEnglishDescription(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    rows={4}
+                    className={textareaClass}
+                  />
+                </div>
 
-                  <option value="Events">
-                    Events
-                  </option>
+                {/* CATEGORY + LOCATION */}
 
-                  <option value="Development">
-                    Development
-                  </option>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="edit-work-english-category"
+                      className="
+                        mb-2
+                        block
+                        text-sm
+                        font-medium
+                        text-[#221f1a]
+                      "
+                    >
+                      Category
+                    </label>
 
-                  <option value="Meetings">
-                    Meetings
-                  </option>
+                    <input
+                      id="edit-work-english-category"
+                      type="text"
+                      value={
+                        englishCategory
+                      }
+                      onChange={(e) =>
+                        setEnglishCategory(
+                          e.target.value,
+                        )
+                      }
+                      disabled={loading}
+                      className={
+                        inputClass
+                      }
+                    />
+                  </div>
 
-                  <option value="Community">
-                    Community
-                  </option>
+                  <div>
+                    <label
+                      htmlFor="edit-work-english-location"
+                      className="
+                        mb-2
+                        block
+                        text-sm
+                        font-medium
+                        text-[#221f1a]
+                      "
+                    >
+                      Location
+                    </label>
 
-                  <option value="Other">
-                    Other
-                  </option>
-                </select>
+                    <input
+                      id="edit-work-english-location"
+                      type="text"
+                      value={
+                        englishLocation
+                      }
+                      onChange={(e) =>
+                        setEnglishLocation(
+                          e.target.value,
+                        )
+                      }
+                      disabled={loading}
+                      className={
+                        inputClass
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* EVENT TYPES + EVENT CATEGORY */}
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="edit-work-english-event-types"
+                      className="
+                        mb-2
+                        block
+                        text-sm
+                        font-medium
+                        text-[#221f1a]
+                      "
+                    >
+                      Event Types
+                    </label>
+
+                    <input
+                      id="edit-work-english-event-types"
+                      type="text"
+                      value={
+                        englishEventTypes
+                      }
+                      onChange={(e) =>
+                        setEnglishEventTypes(
+                          e.target.value,
+                        )
+                      }
+                      disabled={loading}
+                      className={
+                        inputClass
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="edit-work-english-event-category"
+                      className="
+                        mb-2
+                        block
+                        text-sm
+                        font-medium
+                        text-[#221f1a]
+                      "
+                    >
+                      Event Category
+                    </label>
+
+                    <input
+                      id="edit-work-english-event-category"
+                      type="text"
+                      value={
+                        englishEventCategory
+                      }
+                      onChange={(e) =>
+                        setEnglishEventCategory(
+                          e.target.value,
+                        )
+                      }
+                      disabled={loading}
+                      className={
+                        inputClass
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* PROBLEM */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-english-problem"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Problem
+                  </label>
+
+                  <textarea
+                    id="edit-work-english-problem"
+                    value={englishProblem}
+                    onChange={(e) =>
+                      setEnglishProblem(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    rows={3}
+                    className={textareaClass}
+                  />
+                </div>
+
+                {/* ACTION */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-english-action"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Action
+                  </label>
+
+                  <textarea
+                    id="edit-work-english-action"
+                    value={englishAction}
+                    onChange={(e) =>
+                      setEnglishAction(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    rows={3}
+                    className={textareaClass}
+                  />
+                </div>
+
+                {/* OUTCOME */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-english-outcome"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    Outcome
+                  </label>
+
+                  <textarea
+                    id="edit-work-english-outcome"
+                    value={englishOutcome}
+                    onChange={(e) =>
+                      setEnglishOutcome(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    rows={3}
+                    className={textareaClass}
+                  />
+                </div>
               </div>
             </div>
 
             {/* =================================================
-                NEPALI SECTION
+                NEPALI
             ================================================= */}
 
             <div
@@ -718,7 +1500,322 @@ export default function EditGalleryModal({
                 border
                 border-[#e1d0cf]
                 bg-[#faf9f7]
-                p-4
+                p-5
+              "
+            >
+              <h3
+                className="
+                  mb-5
+                  text-sm
+                  font-semibold
+                  text-[#8A1538]
+                "
+              >
+                नेपाली
+              </h3>
+
+              <div className="space-y-5">
+                {/* TITLE */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-nepali-title"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    शीर्षक
+                  </label>
+
+                  <input
+                    id="edit-work-nepali-title"
+                    type="text"
+                    value={nepaliTitle}
+                    onChange={(e) =>
+                      setNepaliTitle(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    className={inputClass}
+                  />
+                </div>
+
+                {/* DESCRIPTION */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-nepali-description"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    विवरण
+                  </label>
+
+                  <textarea
+                    id="edit-work-nepali-description"
+                    value={
+                      nepaliDescription
+                    }
+                    onChange={(e) =>
+                      setNepaliDescription(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    rows={4}
+                    className={textareaClass}
+                  />
+                </div>
+
+                {/* CATEGORY + LOCATION */}
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="edit-work-nepali-category"
+                      className="
+                        mb-2
+                        block
+                        text-sm
+                        font-medium
+                        text-[#221f1a]
+                      "
+                    >
+                      वर्ग
+                    </label>
+
+                    <input
+                      id="edit-work-nepali-category"
+                      type="text"
+                      value={
+                        nepaliCategory
+                      }
+                      onChange={(e) =>
+                        setNepaliCategory(
+                          e.target.value,
+                        )
+                      }
+                      disabled={loading}
+                      className={
+                        inputClass
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="edit-work-nepali-location"
+                      className="
+                        mb-2
+                        block
+                        text-sm
+                        font-medium
+                        text-[#221f1a]
+                      "
+                    >
+                      स्थान
+                    </label>
+
+                    <input
+                      id="edit-work-nepali-location"
+                      type="text"
+                      value={
+                        nepaliLocation
+                      }
+                      onChange={(e) =>
+                        setNepaliLocation(
+                          e.target.value,
+                        )
+                      }
+                      disabled={loading}
+                      className={
+                        inputClass
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* EVENT TYPES + EVENT CATEGORY */}
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="edit-work-nepali-event-types"
+                      className="
+                        mb-2
+                        block
+                        text-sm
+                        font-medium
+                        text-[#221f1a]
+                      "
+                    >
+                      कार्यक्रम प्रकार
+                    </label>
+
+                    <input
+                      id="edit-work-nepali-event-types"
+                      type="text"
+                      value={
+                        nepaliEventTypes
+                      }
+                      onChange={(e) =>
+                        setNepaliEventTypes(
+                          e.target.value,
+                        )
+                      }
+                      disabled={loading}
+                      className={
+                        inputClass
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="edit-work-nepali-event-category"
+                      className="
+                        mb-2
+                        block
+                        text-sm
+                        font-medium
+                        text-[#221f1a]
+                      "
+                    >
+                      कार्यक्रम वर्ग
+                    </label>
+
+                    <input
+                      id="edit-work-nepali-event-category"
+                      type="text"
+                      value={
+                        nepaliEventCategory
+                      }
+                      onChange={(e) =>
+                        setNepaliEventCategory(
+                          e.target.value,
+                        )
+                      }
+                      disabled={loading}
+                      className={
+                        inputClass
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* PROBLEM */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-nepali-problem"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    समस्या
+                  </label>
+
+                  <textarea
+                    id="edit-work-nepali-problem"
+                    value={nepaliProblem}
+                    onChange={(e) =>
+                      setNepaliProblem(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    rows={3}
+                    className={textareaClass}
+                  />
+                </div>
+
+                {/* ACTION */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-nepali-action"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    कार्य
+                  </label>
+
+                  <textarea
+                    id="edit-work-nepali-action"
+                    value={nepaliAction}
+                    onChange={(e) =>
+                      setNepaliAction(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    rows={3}
+                    className={textareaClass}
+                  />
+                </div>
+
+                {/* OUTCOME */}
+
+                <div>
+                  <label
+                    htmlFor="edit-work-nepali-outcome"
+                    className="
+                      mb-2
+                      block
+                      text-sm
+                      font-medium
+                      text-[#221f1a]
+                    "
+                  >
+                    परिणाम
+                  </label>
+
+                  <textarea
+                    id="edit-work-nepali-outcome"
+                    value={nepaliOutcome}
+                    onChange={(e) =>
+                      setNepaliOutcome(
+                        e.target.value,
+                      )
+                    }
+                    disabled={loading}
+                    rows={3}
+                    className={textareaClass}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* =================================================
+                MAIN IMAGE
+            ================================================= */}
+
+            <div
+              className="
+                rounded-xl
+                border
+                border-[#e1d0cf]
+                bg-[#faf9f7]
+                p-5
               "
             >
               <h3
@@ -729,196 +1826,16 @@ export default function EditGalleryModal({
                   text-[#8A1538]
                 "
               >
-                नेपाली
+                Main Image
               </h3>
 
-              {/* NEPALI TITLE */}
-
-              <div className="mb-4">
-                <label
-                  htmlFor="gallery-nepali-title"
-                  className="
-                    mb-2
-                    block
-                    text-sm
-                    font-medium
-                    text-[#221f1a]
-                  "
-                >
-                  शीर्षक
-                </label>
-
-                <input
-                  id="gallery-nepali-title"
-                  type="text"
-                  value={nepaliTitle}
-                  onChange={(e) =>
-                    setNepaliTitle(
-                      e.target.value,
-                    )
-                  }
-                  disabled={loading}
-                  placeholder="नेपाली शीर्षक लेख्नुहोस्"
-                  className="
-                    w-full
-                    rounded-lg
-                    border
-                    border-gray-300
-                    bg-white
-                    px-4
-                    py-3
-                    text-sm
-                    text-[#221f1a]
-                    outline-none
-                    transition
-                    focus:border-[#8A1538]
-                    focus:ring-1
-                    focus:ring-[#8A1538]
-                    disabled:opacity-50
-                  "
-                />
-              </div>
-
-              {/* NEPALI CATEGORY */}
-
-              <div>
-                <label
-                  htmlFor="gallery-nepali-category"
-                  className="
-                    mb-2
-                    block
-                    text-sm
-                    font-medium
-                    text-[#221f1a]
-                  "
-                >
-                  वर्ग
-                </label>
-
-                <select
-                  id="gallery-nepali-category"
-                  value={nepaliCategory}
-                  onChange={(e) =>
-                    setNepaliCategory(
-                      e.target.value,
-                    )
-                  }
-                  disabled={loading}
-                  className="
-                    w-full
-                    rounded-lg
-                    border
-                    border-gray-300
-                    bg-white
-                    px-4
-                    py-3
-                    text-sm
-                    text-[#221f1a]
-                    outline-none
-                    transition
-                    focus:border-[#8A1538]
-                    focus:ring-1
-                    focus:ring-[#8A1538]
-                    disabled:opacity-50
-                  "
-                >
-                  <option value="">
-                    वर्ग चयन गर्नुहोस्
-                  </option>
-
-                  <option value="कार्यक्रम">
-                    कार्यक्रम
-                  </option>
-
-                  <option value="विकास">
-                    विकास
-                  </option>
-
-                  <option value="बैठक">
-                    बैठक
-                  </option>
-
-                  <option value="समुदाय">
-                    समुदाय
-                  </option>
-
-                  <option value="अन्य">
-                    अन्य
-                  </option>
-                </select>
-              </div>
-            </div>
-
-            {/* =================================================
-                DATE
-            ================================================= */}
-
-            <div>
-              <label
-                htmlFor="gallery-date"
-                className="
-                  mb-2
-                  block
-                  text-sm
-                  font-medium
-                  text-[#221f1a]
-                "
-              >
-                Date
-              </label>
-
               <input
-                id="gallery-date"
-                type="date"
-                value={date}
-                onChange={(e) =>
-                  setDate(
-                    e.target.value,
-                  )
-                }
-                disabled={loading}
-                className="
-                  w-full
-                  rounded-lg
-                  border
-                  border-gray-300
-                  bg-white
-                  px-4
-                  py-3
-                  text-sm
-                  text-[#221f1a]
-                  outline-none
-                  transition
-                  focus:border-[#8A1538]
-                  focus:ring-1
-                  focus:ring-[#8A1538]
-                  disabled:opacity-50
-                "
-              />
-            </div>
-
-            {/* =================================================
-                IMAGE
-            ================================================= */}
-
-            <div>
-              <label
-                className="
-                  mb-2
-                  block
-                  text-sm
-                  font-medium
-                  text-[#221f1a]
-                "
-              >
-                Image
-              </label>
-
-              <input
-                ref={fileInputRef}
+                ref={mainImageInputRef}
                 type="file"
                 accept="image/*"
-                onChange={handleImageChange}
+                onChange={
+                  handleImageChange
+                }
                 disabled={loading}
                 className="hidden"
               />
@@ -926,12 +1843,12 @@ export default function EditGalleryModal({
               <button
                 type="button"
                 onClick={() =>
-                  fileInputRef.current?.click()
+                  mainImageInputRef.current?.click()
                 }
                 disabled={loading}
                 className="
                   flex
-                  h-48
+                  h-64
                   w-full
                   cursor-pointer
                   items-center
@@ -953,7 +1870,7 @@ export default function EditGalleryModal({
                     src={imagePreview}
                     alt={
                       englishTitle ||
-                      "Gallery preview"
+                      "Work preview"
                     }
                     className="
                       h-full
@@ -963,33 +1880,237 @@ export default function EditGalleryModal({
                   />
                 ) : (
                   <div className="text-center">
-                    <div className="text-xl">
+                    <div className="text-2xl">
                       ⬆
                     </div>
 
-                    <p
-                      className="
-                        mt-1
-                        text-sm
-                        text-gray-500
-                      "
-                    >
-                      Click to upload image
+                    <p className="mt-2 text-sm text-gray-500">
+                      Click to replace
+                      main image
                     </p>
                   </div>
                 )}
               </button>
 
-              <p
+              <p className="mt-2 text-xs text-gray-500">
+                Select a new image only if
+                you want to replace the
+                current image. Maximum 5MB.
+              </p>
+            </div>
+
+            {/* =================================================
+                GALLERY IMAGES
+            ================================================= */}
+
+            <div
+              className="
+                rounded-xl
+                border
+                border-[#e1d0cf]
+                bg-[#faf9f7]
+                p-5
+              "
+            >
+              <div className="flex items-center justify-between">
+                <h3
+                  className="
+                    text-sm
+                    font-semibold
+                    text-[#8A1538]
+                  "
+                >
+                  Gallery Images
+                </h3>
+
+                <span className="text-xs text-gray-500">
+                  {galleryImages.length +
+                    selectedGalleryImages.length}{" "}
+                  images
+                </span>
+              </div>
+
+              {/* EXISTING IMAGES */}
+
+              {galleryImages.length >
+                0 && (
+                <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                  {galleryImages.map(
+                    (
+                      galleryImage,
+                      index,
+                    ) => (
+                      <div
+                        key={`${galleryImage}-${index}`}
+                        className="group relative overflow-hidden rounded-lg border"
+                      >
+                        <img
+                          src={galleryImage}
+                          alt={`Gallery ${
+                            index + 1
+                          }`}
+                          className="
+                            h-28
+                            w-full
+                            object-cover
+                          "
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            removeGalleryImage(
+                              index,
+                            )
+                          }
+                          disabled={
+                            loading
+                          }
+                          className="
+                            absolute
+                            right-1
+                            top-1
+                            flex
+                            h-7
+                            w-7
+                            items-center
+                            justify-center
+                            rounded-full
+                            bg-black/70
+                            text-sm
+                            text-white
+                            transition
+                            hover:bg-red-600
+                            disabled:opacity-50
+                          "
+                          aria-label="Remove gallery image"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ),
+                  )}
+                </div>
+              )}
+
+              {/* NEW IMAGE PREVIEWS */}
+
+              {galleryPreviews.length >
+                0 && (
+                <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                  {galleryPreviews.map(
+                    (
+                      preview,
+                      index,
+                    ) => (
+                      <div
+                        key={`${preview}-${index}`}
+                        className="relative overflow-hidden rounded-lg border"
+                      >
+                        <img
+                          src={preview}
+                          alt={`New gallery ${
+                            index + 1
+                          }`}
+                          className="
+                            h-28
+                            w-full
+                            object-cover
+                          "
+                        />
+
+                        <span className="absolute bottom-1 left-1 rounded bg-[#8A1538] px-2 py-1 text-[10px] text-white">
+                          New
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            removeNewGalleryImage(
+                              index,
+                            )
+                          }
+                          disabled={
+                            loading
+                          }
+                          className="
+                            absolute
+                            right-1
+                            top-1
+                            flex
+                            h-7
+                            w-7
+                            items-center
+                            justify-center
+                            rounded-full
+                            bg-black/70
+                            text-sm
+                            text-white
+                            transition
+                            hover:bg-red-600
+                            disabled:opacity-50
+                          "
+                          aria-label="Remove new gallery image"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ),
+                  )}
+                </div>
+              )}
+
+              {/* UPLOAD */}
+
+              <input
+                ref={
+                  galleryImageInputRef
+                }
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={
+                  handleGalleryImagesChange
+                }
+                disabled={loading}
+                className="hidden"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  galleryImageInputRef.current?.click()
+                }
+                disabled={loading}
                 className="
-                  mt-2
-                  text-xs
-                  text-gray-500
+                  mt-4
+                  flex
+                  w-full
+                  items-center
+                  justify-center
+                  rounded-lg
+                  border
+                  border-dashed
+                  border-gray-300
+                  bg-white
+                  px-4
+                  py-4
+                  text-sm
+                  font-medium
+                  text-[#4a483f]
+                  transition
+                  hover:bg-gray-50
+                  disabled:cursor-not-allowed
+                  disabled:opacity-50
                 "
               >
-                Select a new image only if you
-                want to replace the current one.
-                Maximum 5MB.
+                + Add Gallery Images
+              </button>
+
+              <p className="mt-2 text-xs text-gray-500">
+                You can select multiple
+                images. Maximum 5MB per
+                image.
               </p>
             </div>
           </div>
@@ -1001,10 +2122,13 @@ export default function EditGalleryModal({
           <div
             className="
               flex
+              shrink-0
               items-center
               justify-end
               gap-3
               border-t
+              border-[#e1d0cf]
+              bg-white
               px-6
               py-4
             "

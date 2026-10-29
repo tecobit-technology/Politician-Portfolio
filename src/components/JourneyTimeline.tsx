@@ -18,13 +18,14 @@ type JourneyTimelineProps = {
   items: JourneyItem[];
 };
 
-export default function JourneyTimeline({ items }: JourneyTimelineProps) {
+export default function JourneyTimeline({
+  items,
+}: JourneyTimelineProps) {
   const t = useTranslations("JourneyTimeline");
 
   return (
     <section className="bg-white px-6 py-20">
       <div className="mx-auto w-full max-w-6xl">
-
         {/* Heading */}
         <div className="mb-16 text-center">
           <p className="mb-2 text-xs font-medium uppercase tracking-[0.25em] text-[#8A1538]">
@@ -42,7 +43,7 @@ export default function JourneyTimeline({ items }: JourneyTimelineProps) {
 
         {/* Timeline */}
         <div className="relative mx-auto max-w-5xl">
-          {/* Center Line */}
+          {/* Desktop Center Line */}
           <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-gray-300 md:block" />
 
           {/* Mobile Line */}
@@ -73,7 +74,6 @@ export default function JourneyTimeline({ items }: JourneyTimelineProps) {
 
               return (
                 <div key={index} className="relative">
-
                   {/* Timeline Dot */}
                   <div
                     className={`absolute left-3 top-7 z-20 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-white shadow ${dotColor} md:left-1/2`}
@@ -81,71 +81,72 @@ export default function JourneyTimeline({ items }: JourneyTimelineProps) {
 
                   {/* Connector */}
                   <div
-                    className={`absolute top-[31px] hidden h-px w-9 bg-gray-300 md:block ${
-                      item.side === "left"
-                        ? "right-1/2"
-                        : "left-1/2"
-                    }`}
+                    className={`absolute top-[31px] hidden h-px w-9 bg-gray-300 md:block ${item.side === "left"
+                      ? "right-1/2"
+                      : "left-1/2"
+                      }`}
                   />
 
-                  {/* Card */}
+                  {/* Card Position */}
                   <div
-                    className={`pl-8 md:w-[calc(50%-36px)] md:pl-0 ${
-                      item.side === "left"
-                        ? "md:mr-auto"
-                        : "md:ml-auto"
-                    }`}
+                    className={`pl-8 md:w-[calc(50%-36px)] md:pl-0 ${item.side === "left"
+                      ? "md:mr-auto"
+                      : "md:ml-auto"
+                      }`}
                   >
+                    {/* Card */}
                     <div
-                      className={`border bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${borderColor}`}
+                      className={`border bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${borderColor}`}
                     >
                       {/* Year + Category */}
-                      <div className="mb-2 flex items-center gap-2">
+                      <div className="mb-3 flex flex-wrap items-center gap-3">
                         <span
-                          className={`px-2 py-1 text-[8px] font-semibold uppercase tracking-wide ${badgeColor}`}
+                          className={`px-3 py-1.5 text-xs font-semibold uppercase tracking-wide ${badgeColor}`}
                         >
                           {item.year}
                         </span>
 
-                        <span className="text-[8px] font-medium uppercase tracking-wider text-gray-400">
+                        <span className="text-xs font-medium uppercase tracking-wider text-gray-400">
                           {item.category}
                         </span>
                       </div>
 
                       {/* Title */}
-                      <h3 className="mb-2 text-sm font-semibold text-gray-900">
+                      <h3 className="mb-3 text-lg font-semibold leading-7 text-gray-900 md:text-xl">
                         {item.title}
                       </h3>
 
                       {/* Description */}
-                      <p className="text-[10px] leading-5 text-gray-500">
+                      <p className="text-sm leading-6 text-gray-500 md:text-base">
                         {item.description}
                       </p>
 
                       {/* One Image */}
-                      {item.image && (
-                        <div className="relative mt-3 h-32 w-full overflow-hidden">
+                      {item.image && !item.images?.length && (
+                        <div className="relative mt-4 h-40 w-full overflow-hidden">
                           <Image
                             src={item.image}
                             alt={item.title}
                             fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover"
                           />
                         </div>
                       )}
 
                       {/* Multiple Images */}
-                      {item.images && (
-                        <div className="mt-3 grid grid-cols-2 gap-2">
+                      {item.images && item.images.length > 0 && (
+                        <div className="mt-4 grid grid-cols-2 gap-2">
                           {item.images.map((image, imageIndex) => (
                             <div
                               key={imageIndex}
-                              className="relative h-20 overflow-hidden"
+                              className="relative h-24 overflow-hidden"
                             >
                               <Image
                                 src={image}
                                 alt={`${item.title} ${imageIndex + 1}`}
                                 fill
+                                sizes="(max-width: 768px) 50vw, 25vw"
                                 className="object-cover"
                               />
                             </div>

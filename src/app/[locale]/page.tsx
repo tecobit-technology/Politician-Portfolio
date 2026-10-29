@@ -3,12 +3,96 @@ import { getTranslations } from "next-intl/server";
 import HeroSection from "../../components/HeroSection";
 import SectionHeading from "../../components/SectionHeading";
 import { FeaturedWork } from "../../components/FeaturedWork";
-import { JourneySection } from "../../components/JourneySection";
+import JourneyTimeline from "../../components/JourneyTimeline";
 import { LatestNews } from "../../components/LatestNews";
 import { ContactCta } from "../../components/ContactCta";
 
 export default async function Home() {
   const t = await getTranslations("Home");
+  const tJourney = await getTranslations("Journey");
+
+  const journeyItems = [
+    {
+      year: tJourney("items.birth.year"),
+      category: tJourney("items.birth.category"),
+      title: tJourney("items.birth.title"),
+      description: tJourney("items.birth.description"),
+      side: "left" as const,
+      color: "gold" as const,
+    },
+    {
+      year: tJourney("items.childhood.year"),
+      category: tJourney("items.childhood.category"),
+      title: tJourney("items.childhood.title"),
+      description: tJourney("items.childhood.description"),
+      side: "right" as const,
+      color: "blue" as const,
+    },
+    {
+      year: tJourney("items.turningPoint.year"),
+      category: tJourney("items.turningPoint.category"),
+      title: tJourney("items.turningPoint.title"),
+      description: tJourney("items.turningPoint.description"),
+      side: "left" as const,
+      color: "gold" as const,
+    },
+    {
+      year: tJourney("items.undergroundMovement.year"),
+      category: tJourney("items.undergroundMovement.category"),
+      title: tJourney("items.undergroundMovement.title"),
+      description: tJourney("items.undergroundMovement.description"),
+      side: "right" as const,
+      color: "red" as const,
+    },
+    {
+      year: tJourney("items.militiaCommander.year"),
+      category: tJourney("items.militiaCommander.category"),
+      title: tJourney("items.militiaCommander.title"),
+      description: tJourney("items.militiaCommander.description"),
+      side: "left" as const,
+      color: "red" as const,
+    },
+    {
+      year: tJourney("items.pla.year"),
+      category: tJourney("items.pla.category"),
+      title: tJourney("items.pla.title"),
+      description: tJourney("items.pla.description"),
+      side: "right" as const,
+      color: "red" as const,
+    },
+    {
+      year: tJourney("items.basantaSmritiBrigade.year"),
+      category: tJourney("items.basantaSmritiBrigade.category"),
+      title: tJourney("items.basantaSmritiBrigade.title"),
+      description: tJourney("items.basantaSmritiBrigade.description"),
+      side: "left" as const,
+      color: "red" as const,
+    },
+    {
+      year: tJourney("items.armyIntegration.year"),
+      category: tJourney("items.armyIntegration.category"),
+      title: tJourney("items.armyIntegration.title"),
+      description: tJourney("items.armyIntegration.description"),
+      side: "right" as const,
+      color: "gold" as const,
+    },
+    {
+      year: tJourney("items.ruralMunicipalityChairman.year"),
+      category: tJourney("items.ruralMunicipalityChairman.category"),
+      title: tJourney("items.ruralMunicipalityChairman.title"),
+      description: tJourney("items.ruralMunicipalityChairman.description"),
+      side: "left" as const,
+      color: "blue" as const,
+    },
+    {
+      year: tJourney("items.publicLeadership.year"),
+      category: tJourney("items.publicLeadership.category"),
+      title: tJourney("items.publicLeadership.title"),
+      description: tJourney("items.publicLeadership.description"),
+      side: "right" as const,
+      color: "gold" as const,
+    },
+  ];
 
   return (
     <main className="min-h-screen w-full bg-white">
@@ -78,7 +162,7 @@ export default async function Home() {
       <FeaturedWork />
 
       {/* ================= JOURNEY ================= */}
-      <JourneySection />
+      <JourneyTimeline items={journeyItems} />
 
       {/* ================= LATEST NEWS ================= */}
       <LatestNews />
