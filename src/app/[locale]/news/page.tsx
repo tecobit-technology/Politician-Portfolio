@@ -7,6 +7,7 @@ import { Container } from "@/components/Container";
 import { PageTitleBanner } from "@/components/PageTitleBanner";
 import { NewsCard } from "@/components/NewsCard";
 import { SpeechesSection } from "@/components/SpeechesSection";
+import YouTubeCard from "@/components/YouTubeCard";
 
 type NewsTranslation = {
   locale: "en" | "ne";
