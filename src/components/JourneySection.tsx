@@ -8,37 +8,36 @@ export function JourneySection() {
   const t = useTranslations("JourneySection");
 
   return (
-    <section className="mt-[59px] bg-white px-6 py-20 lg:px-16">
+    <section className="mt-10 bg-white px-4 py-14 sm:px-6 sm:py-20 md:mt-[59px] lg:px-16">
       <div className="mx-auto w-full max-w-[1066px]">
 
         {/* Heading */}
-        <div className="mx-auto mb-12 flex max-w-[558px] flex-col items-center gap-4 text-center">
+        <div className="mx-auto mb-10 flex max-w-[558px] flex-col items-center gap-4 text-center sm:mb-12">
           <p className="text-[13px] font-semibold text-[#C9982A]">
             {t("label")}
           </p>
 
-          <h2 className="font-serif text-[32px] font-bold leading-tight text-[#221F1A]">
+          <h2 className="font-serif text-2xl font-bold leading-tight text-[#221F1A] sm:text-[32px]">
             {t("title")}
           </h2>
 
-          <p className="text-[18px] leading-7 text-[#4A483F]">
+          <p className="text-base leading-7 text-[#4A483F] sm:text-[18px]">
             {t("description")}
           </p>
         </div>
 
         {/* Journey Cards */}
-        <div className="relative lg:h-[772px]">
+        <div className="relative grid gap-6 md:grid-cols-2 xl:block xl:h-[772px]">
 
           {/* ================= EARLY LIFE ================= */}
           <article
             className="
               relative
-              mb-6
               border border-[#C5C6CD]
               bg-white
-              p-6
+              p-5 sm:p-6
               shadow-[0_4px_10px_rgba(15,28,46,0.05)]
-              lg:absolute lg:left-0 lg:top-0 lg:mb-0 lg:w-[511px]
+              xl:absolute xl:left-0 xl:top-0 xl:w-[511px]
             "
           >
             <div className="flex items-start gap-4">
@@ -52,7 +51,7 @@ export function JourneySection() {
                   2040–2056 B.S.
                 </span>
 
-                <h3 className="mt-2 font-serif text-2xl text-black">
+                <h3 className="mt-2 font-serif text-xl text-black sm:text-2xl">
                   {t("earlyLife.title")}
                 </h3>
               </div>
@@ -68,7 +67,7 @@ export function JourneySection() {
               </p>
 
               <div className="border-t border-[#C5C6CD] pt-4">
-                <div className="h-[192px] overflow-hidden border border-[#C5C6CD]">
+                <div className="h-[160px] overflow-hidden border border-[#C5C6CD] sm:h-[192px]">
                   <Image
                     src="/images/Journey1.jpg"
                     alt={t("earlyLife.imageAlt")}
@@ -85,12 +84,11 @@ export function JourneySection() {
           <article
             className="
               relative
-              mb-6
               border border-[#C5C6CD]
               bg-white
-              p-6
+              p-5 sm:p-6
               shadow-[0_4px_10px_rgba(15,28,46,0.05)]
-              lg:absolute lg:left-[546px] lg:top-0 lg:mb-0 lg:w-[511px]
+              xl:absolute xl:left-[546px] xl:top-0 xl:w-[511px]
             "
           >
             <div className="flex items-start gap-4">
@@ -104,7 +102,7 @@ export function JourneySection() {
                   2065–2074
                 </span>
 
-                <h3 className="mt-2 font-serif text-2xl text-black">
+                <h3 className="mt-2 font-serif text-xl text-black sm:text-2xl">
                   {t("partyRoles.title")}
                 </h3>
               </div>
@@ -119,8 +117,8 @@ export function JourneySection() {
                 {t("partyRoles.description")}
               </p>
 
-              <div className="flex gap-4 overflow-hidden pt-1">
-                <div className="h-24 w-32 shrink-0 overflow-hidden border border-[#C5C6CD]">
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="h-24 w-full overflow-hidden border border-[#C5C6CD] sm:h-28">
                   <Image
                     src="/images/Journey2.jpg"
                     alt={t("partyRoles.imageAlt1")}
@@ -130,7 +128,7 @@ export function JourneySection() {
                   />
                 </div>
 
-                <div className="h-24 w-32 shrink-0 overflow-hidden border border-[#C5C6CD]">
+                <div className="h-24 w-full overflow-hidden border border-[#C5C6CD] sm:h-28">
                   <Image
                     src="/images/Journey3.jpg"
                     alt={t("partyRoles.imageAlt2")}
@@ -147,12 +145,11 @@ export function JourneySection() {
           <article
             className="
               relative
-              mb-6
               border border-[#C5C6CD]
               bg-white
-              p-6
+              p-5 sm:p-6
               shadow-[0_4px_10px_rgba(15,28,46,0.05)]
-              lg:absolute lg:left-[546px] lg:top-[412px] lg:mb-0 lg:w-[511px]
+              xl:absolute xl:left-[546px] xl:top-[412px] xl:w-[511px]
             "
           >
             <div className="flex items-start gap-4">
@@ -166,7 +163,7 @@ export function JourneySection() {
                   2062–2065
                 </span>
 
-                <h3 className="mt-2 font-serif text-2xl text-black">
+                <h3 className="mt-2 font-serif text-xl text-black sm:text-2xl">
                   {t("politics.title")}
                 </h3>
               </div>
@@ -181,7 +178,7 @@ export function JourneySection() {
                 {t("politics.description")}
               </p>
 
-              <div className="flex gap-2 pt-2">
+              <div className="flex flex-wrap gap-2 pt-2">
                 <span className="rounded-xl bg-[#E5E9EB] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#44474C]">
                   {t("politics.mobilization")}
                 </span>
@@ -199,9 +196,9 @@ export function JourneySection() {
               relative
               border border-[#BA1A1A]
               bg-white
-              p-6
+              p-5 sm:p-6
               shadow-[0_4px_10px_rgba(186,26,26,0.05)]
-              lg:absolute lg:left-0 lg:top-[503px] lg:w-[511px]
+              xl:absolute xl:left-0 xl:top-[503px] xl:w-[511px]
             "
           >
             <div className="flex items-start gap-4">
@@ -215,7 +212,7 @@ export function JourneySection() {
                   2079–Present
                 </span>
 
-                <h3 className="mt-2 font-serif text-2xl text-black">
+                <h3 className="mt-2 font-serif text-xl text-black sm:text-2xl">
                   {t("ongoing.title")}
                 </h3>
               </div>

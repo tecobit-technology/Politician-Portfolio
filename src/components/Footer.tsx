@@ -10,18 +10,18 @@ export default function Footer() {
   return (
     <footer className="w-full bg-[#6C1511] text-white">
       {/* Main Footer Content */}
-      <div className="mx-auto flex max-w-[1170px] items-end justify-center gap-[30px] px-5 pb-[22px] pt-[43px] lg:px-0">
+      <div className="mx-auto flex w-full max-w-[1170px] flex-col items-stretch justify-center gap-8 px-5 pb-[22px] pt-[43px] sm:px-6 lg:flex-row lg:items-end lg:gap-[30px] lg:px-0">
         {/* Left Content + Links + Contact */}
-        <div className="flex w-full flex-col gap-[47px] md:flex-row md:items-start">
+        <div className="flex min-w-0 w-full flex-col gap-[47px] md:flex-row md:items-start">
           {/* Brand */}
-          <div className="w-full shrink-0 md:w-[336px]">
+          <div className="w-full min-w-0 shrink-0 md:w-[min(336px,100%)] lg:w-[336px]">
             <div className="flex items-center">
               <Image
                 src="/icons/logo1.png"
                 alt="Logo"
                 width={25}
                 height={25}
-                className="h-[25px] w-[25px]"
+                className="h-[25px] w-[25px] shrink-0"
               />
 
               <span className="pl-2 text-[18px] font-bold leading-7 text-white">
@@ -35,7 +35,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="w-full shrink-0 md:w-[171px]">
+          <div className="w-full min-w-0 shrink-0 md:w-[171px]">
             <h3 className="mb-3 text-[15px] font-bold leading-normal text-[#C9982A]">
               {t("quickLinks")}
             </h3>
@@ -98,7 +98,7 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="w-full shrink-0 md:w-[259px]">
+          <div className="w-full min-w-0 shrink-0 md:w-[259px]">
             <h3 className="text-[14px] font-semibold uppercase leading-5 tracking-[0.7px] text-[#C9982A]">
               {t("contact")}
             </h3>
@@ -107,7 +107,7 @@ export default function Footer() {
               {/* Phone */}
               <a
                 href="tel:+9779700066129"
-                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+                className="flex min-w-0 items-center gap-2 text-[#EDEBE6] transition hover:text-white"
               >
                 <Image
                   src="/icons/Phone.svg"
@@ -117,13 +117,15 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span>+977 9700066129</span>
+                <span className="break-words">
+                  +977 9700066129
+                </span>
               </a>
 
               {/* Email */}
               <a
                 href="mailto:bishnurokaya@gmail.com"
-                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+                className="flex min-w-0 items-center gap-2 text-[#EDEBE6] transition hover:text-white"
               >
                 <Image
                   src="/icons/Email.svg"
@@ -133,7 +135,9 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span>bishnurokaya@gmail.com</span>
+                <span className="break-all">
+                  bishnurokaya@gmail.com
+                </span>
               </a>
 
               {/* YouTube */}
@@ -141,7 +145,7 @@ export default function Footer() {
                 href="https://youtube.com/bishnurokaya"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+                className="flex min-w-0 items-center gap-2 text-[#EDEBE6] transition hover:text-white"
               >
                 <Image
                   src="/icons/Youtube.svg"
@@ -151,7 +155,9 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span>youtube.com/bishnurokaya</span>
+                <span className="break-all">
+                  youtube.com/bishnurokaya
+                </span>
               </a>
 
               {/* Instagram */}
@@ -159,7 +165,7 @@ export default function Footer() {
                 href="https://instagram.com/bishnurokaya"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+                className="flex min-w-0 items-center gap-2 text-[#EDEBE6] transition hover:text-white"
               >
                 <Image
                   src="/icons/Instagram.svg"
@@ -169,7 +175,9 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span>@bishnurokaya</span>
+                <span className="break-all">
+                  @bishnurokaya
+                </span>
               </a>
 
               {/* Facebook */}
@@ -177,7 +185,7 @@ export default function Footer() {
                 href="https://facebook.com/bishnurokaya"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[#EDEBE6] transition hover:text-white"
+                className="flex min-w-0 items-center gap-2 text-[#EDEBE6] transition hover:text-white"
               >
                 <Image
                   src="/icons/facebook.svg"
@@ -187,25 +195,27 @@ export default function Footer() {
                   className="h-4 w-4 shrink-0"
                 />
 
-                <span>facebook.com/bishnurokaya</span>
+                <span className="break-all">
+                  facebook.com/bishnurokaya
+                </span>
               </a>
             </div>
           </div>
         </div>
 
         {/* Newsletter / Campaign */}
-        <div className="w-[280px] shrink-0 rounded-[24px] border border-white/10 bg-white/10 p-[24px]">
+        <div className="w-full min-w-0 shrink-0 rounded-[24px] border border-white/10 bg-white/10 p-[24px] lg:w-[280px]">
           <h3 className="text-[16px] font-semibold leading-normal text-[#C9982A]">
             {t("campaign.title")}
           </h3>
 
-          <p className="mt-3 w-[231px] text-[16px] leading-normal text-[#90A1B9]">
+          <p className="mt-3 w-full text-[16px] leading-normal text-[#90A1B9]">
             {t("campaign.description")}
           </p>
 
           <Link
             href="/contact"
-            className="mt-4 flex h-[58px] w-[232px] items-center justify-center rounded-[18px] bg-white text-[18px] font-semibold text-[#8A1538] transition hover:bg-slate-100"
+            className="mt-4 flex min-h-[58px] w-full items-center justify-center rounded-[18px] bg-white px-4 py-3 text-center text-[18px] font-semibold text-[#8A1538] transition hover:bg-slate-100"
           >
             {t("campaign.joinNow")}
           </Link>
@@ -213,7 +223,7 @@ export default function Footer() {
       </div>
 
       {/* Divider */}
-      <div className="mx-[69px] border-t border-[#C9C6BF]" />
+      <div className="mx-5 border-t border-[#C9C6BF] sm:mx-8 lg:mx-[69px]" />
 
       {/* Copyright */}
       <div className="px-5 py-[18px] text-center text-[13px] leading-normal text-[#C9C6BF]">
